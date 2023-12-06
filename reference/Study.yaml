@@ -1,0 +1,443 @@
+openapi: 3.1.0
+x-stoplight:
+  id: a5ujfx5o1nsem
+info:
+  title: Study
+  version: '1.0'
+servers:
+  - url: 'https://msp-ws2223-4.dev.mobile.ifi.lmu.de'
+paths:
+  /study/courses/all:
+    get:
+      summary: Get all available courses
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        term:
+                          type: string
+                        lecturer:
+                          type: string
+                        type:
+                          type: string
+                          enum:
+                            - LECTURE
+                            - INTERNSHIP
+                            - SEMINAR
+                            - TUTORIAL
+                            - EXERCISE_COURSE
+                      required:
+                        - id
+                        - name
+                        - term
+                        - type
+                required:
+                  - courses
+        '401':
+          description: Unauthorized
+      operationId: get-study-courses-all
+      description: ''
+    parameters: []
+  /study/courses/personal:
+    get:
+      summary: Get the user's joined courses
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        term:
+                          type: string
+                        lecturer:
+                          type: string
+                        type:
+                          type: string
+                          enum:
+                            - LECTURE
+                            - INTERNSHIP
+                            - SEMINAR
+                            - TUTORIAL
+                            - EXERCISE_COURSE
+                      required:
+                        - id
+                        - name
+                        - term
+                required:
+                  - courses
+        '401':
+          description: Unauthorized
+      operationId: get-study-courses-personal
+    parameters: []
+  '/study/courses/info/{courseId}':
+    get:
+      summary: Get info on a specific course
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  term:
+                    type: string
+                  language:
+                    type: string
+                  lecturer:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - LECTURE
+                      - INTERNSHIP
+                      - SEMINAR
+                      - TUTORIAL
+                      - EXERCISE_COURSE
+                  max_participants:
+                    type: integer
+                  organisational_unit:
+                    type: string
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  lsf_id:
+                    type: string
+                required:
+                  - id
+                  - name
+                  - term
+                  - language
+                  - type
+                  - lsf_id
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      operationId: get-study-courses-info
+      parameters: []
+    parameters:
+      - schema:
+          type: string
+        name: courseId
+        in: path
+        required: true
+  /study/courses/registration:
+    post:
+      summary: Register for course
+      operationId: post-study-courses-register
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                courseId:
+                  type: string
+              required:
+                - courseId
+        description: ''
+    parameters: []
+    delete:
+      summary: Unregister from course
+      operationId: delete-study-courses-registration
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                courseId:
+                  type: string
+        description: ''
+  /study/courses/webscrape:
+    post:
+      summary: Webscrape multiple courses
+      operationId: post-study-courses-webscrape
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Fetched content
+        '500':
+          description: Internal Server Error
+      description: ''
+      x-internal: true
+    parameters: []
+  '/study/courses/webscrape/{lsfId}':
+    post:
+      summary: Webscrape single course
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Fetched content
+        '500':
+          description: Internal Server Error
+      operationId: get-study-courses-webscrape-single
+      x-internal: true
+    parameters:
+      - schema:
+          type: string
+        name: lsfId
+        in: path
+        required: true
+        description: LSF Id of the course to scrape
+  /study/events/today:
+    get:
+      summary: Gets all events today
+      tags: []
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventOccurence'
+                required:
+                  - events
+        '401':
+          description: Unauthorized
+      operationId: get-study-events-today
+    parameters: []
+  '/study/events/{date}':
+    get:
+      summary: Gets all events on specific data
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventOccurence'
+        '401':
+          description: Unauthorized
+      operationId: get-study-events-date
+    parameters:
+      - schema:
+          type: string
+          format: date
+          example: '2022-10-22'
+        name: date
+        in: path
+        required: true
+  '/study/events/{startDate}/{endDate}':
+    get:
+      summary: Gets all events in specific dat range
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: string
+        '401':
+          description: Unauthorized
+      operationId: get-study-events-date-range
+      description: ''
+    parameters:
+      - schema:
+          type: string
+          format: date
+          default: '2022-10-22'
+        name: startDate
+        in: path
+        required: true
+        description: inclusive
+      - schema:
+          type: string
+          format: date
+          example: '2022-10-25'
+        name: endDate
+        in: path
+        required: true
+        description: inclusive
+components:
+  schemas:
+    Event:
+      title: Event
+      x-stoplight:
+        id: zf8s6cjmz530x
+      type: object
+      description: Describes an event in a course
+      properties:
+        group:
+          type:
+            - string
+            - 'null'
+          description: null when only one group (e.g. for lectures)
+        weekday:
+          type: integer
+          description: '-1 = Everyday, 0 = Monday, 6 = Sunday'
+        start_time:
+          type: number
+          description: 'in hours (14.5 = 2:30 pm)'
+        end_time:
+          type: number
+          description: 'in hours (16.25 = 4:15 pm)'
+        is_ct:
+          type: boolean
+          description: Whether time is c.t. (cum tempore)
+        frequency:
+          type: string
+          enum:
+            - weekly
+            - biweekly
+            - single
+            - continuous
+        start_date:
+          type: string
+          format: date
+          description: 'Format: yyyy-mm-dd'
+        end_date:
+          type: string
+          format: date
+          description: 'Format: yyyy-mm-dd'
+        location:
+          type: string
+          example: Geschw.-Scholl-Pl. 1 (M) - M 218
+        roomfinder_link:
+          type: string
+          format: uri
+          example: 'http://www.uni-muenchen.de/raumfinder/...'
+        type:
+          type: string
+          enum:
+            - LECTURE
+            - INTERNSHIP
+            - SEMINAR
+            - TUTORIAL
+            - EXERCISE_COURSE
+      required:
+        - group
+        - weekday
+        - start_time
+        - end_time
+        - is_ct
+        - frequency
+        - start_date
+        - end_date
+        - type
+    EventOccurence:
+      title: EventOccurrence
+      x-stoplight:
+        id: aip0zytzn9les
+      type: object
+      description: Describes an event occurrence
+      properties:
+        course_id:
+          type: string
+          description: The course this event belongs to
+        course_name:
+          type: string
+        group:
+          type:
+            - string
+            - 'null'
+          description: null when only one group (e.g. for lectures)
+        start_time:
+          type: number
+          description: 'in hours (14.5 = 2:30 pm)'
+        end_time:
+          type: number
+          description: 'in hours (16.25 = 4:15 pm)'
+        is_ct:
+          type: boolean
+          description: Whether time is c.t. (cum tempore)
+        date:
+          type: string
+          format: date
+          description: 'Format: yyyy-mm-dd'
+        location:
+          type: string
+          example: Geschw.-Scholl-Pl. 1 (M) - M 218
+        roomfinder_link:
+          type: string
+          format: uri
+          example: 'http://www.uni-muenchen.de/raumfinder/...'
+        type:
+          type: string
+          enum:
+            - LECTURE
+            - INTERNSHIP
+            - SEMINAR
+            - TUTORIAL
+            - EXERCISE_COURSE
+      required:
+        - course_id
+        - course_name
+        - group
+        - start_time
+        - end_time
+        - is_ct
+        - date
+        - type

@@ -1,0 +1,65 @@
+openapi: 3.0.0
+info:
+  title: Authentication and Authorization
+  version: '1.0'
+servers:
+  - url: 'https://msp-ws2223-4.dev.mobile.ifi.lmu.de'
+paths:
+  /auth/signup:
+    post:
+      summary: Add a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: User
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+      responses:
+        '201':
+          description: 'OK, Created new User'
+        '409':
+          description: User already exists
+        '500':
+          description: Bad request
+    parameters: []
+  /auth/login:
+    post:
+      summary: Login with credentials
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: Credentials
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Cannot find user
+        '403':
+          description: Not allowed
+        '500':
+          description: Bad request
+    parameters: []
+components:
+  schemas: {}
+  securitySchemes: {}

@@ -1,0 +1,167 @@
+openapi: 3.1.0
+x-stoplight:
+  id: d5qrt59ckt7wv
+info:
+  title: Menu
+  version: '1.0'
+servers:
+  - url: 'https://msp-ws2223-4.dev.mobile.ifi.lmu.de'
+paths:
+  /menu/items:
+    get:
+      summary: Get all menu items
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        '[0]':
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                            name:
+                              type: string
+                            url:
+                              type: string
+                            icon:
+                              type: string
+                            isFavourite:
+                              type: boolean
+              examples:
+                Example 1:
+                  value:
+                    items:
+                      - id: string
+                        name: string
+                        url: string
+                        icon: string
+                        isFavourite: true
+                      - ...
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      operationId: get-menu-items
+      description: ''
+    post:
+      summary: Add menu item
+      operationId: post-menu-items
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                url:
+                  type: string
+                icon:
+                  type: string
+                isFavourite:
+                  type: boolean
+                  description: false by default
+              required:
+                - name
+                - url
+                - icon
+        description: ''
+    delete:
+      summary: Delete menu item
+      operationId: delete-menu-items
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                itemId:
+                  type: string
+        description: ''
+      description: ''
+    patch:
+      summary: Change item data
+      operationId: patch-menu-items
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      description: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                itemId:
+                  type: string
+                dataChange:
+                  type: object
+                  required:
+                    - name
+                    - url
+                    - icon
+                    - isFavourite
+                  properties:
+                    name:
+                      type: string
+                    url:
+                      type: string
+                    icon:
+                      type: string
+                    isFavourite:
+                      type: boolean
+              required:
+                - itemId
+                - dataChange
+  /menu/default:
+    patch:
+      summary: Loads default menu items into user
+      operationId: get-menu-default
+      responses:
+        '200':
+          description: Default items loaded
+        '401':
+          description: Unauthorized
+      description: ''
+components:
+  schemas: {}
+  securitySchemes: {}

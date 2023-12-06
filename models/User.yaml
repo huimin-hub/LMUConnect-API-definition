@@ -1,0 +1,14 @@
+title: User
+x-stoplight:
+  id: 8iiakmjaqf6pu
+type: object
+properties:
+  id:
+    type: string
+  name:
+    type: string
+  age:
+    type: integer
+required:
+  - id
+  - name
